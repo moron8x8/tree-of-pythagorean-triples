@@ -1,0 +1,224 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 850px;
+                 background-color: #000000;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 850px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#ff4757", "font": {"color": "white"}, "id": "3,4,5", "label": "3, 4, 5", "shape": "dot", "size": 30}, {"color": "#2ed573", "font": {"color": "white"}, "id": "5,12,13", "label": "5, 12, 13", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "7,24,25", "label": "7, 24, 25", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "9,40,41", "label": "9, 40, 41", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "11,60,61", "label": "11, 60, 61", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "171,140,221", "label": "171, 140, 221", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "153,104,185", "label": "153, 104, 185", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "105,88,137", "label": "105, 88, 137", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "203,396,445", "label": "203, 396, 445", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "555,572,797", "label": "555, 572, 797", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "345,152,377", "label": "345, 152, 377", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "91,60,109", "label": "91, 60, 109", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "189,340,389", "label": "189, 340, 389", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "429,460,629", "label": "429, 460, 629", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "247,96,265", "label": "247, 96, 265", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "55,48,73", "label": "55, 48, 73", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "105,208,233", "label": "105, 208, 233", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "155,468,493", "label": "155, 468, 493", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "987,884,1325", "label": "987, 884, 1325", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "777,464,905", "label": "777, 464, 905", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "297,304,425", "label": "297, 304, 425", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "539,1140,1261", "label": "539, 1140, 1261", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "1755,1748,2477", "label": "1755, 1748, 2477", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "1161,560,1289", "label": "1161, 560, 1289", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "187,84,205", "label": "187, 84, 205", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "429,700,821", "label": "429, 700, 821", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "765,868,1157", "label": "765, 868, 1157", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "391,120,409", "label": "391, 120, 409", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "45,28,53", "label": "45, 28, 53", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "95,168,193", "label": "95, 168, 193", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "145,408,433", "label": "145, 408, 433", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "817,744,1105", "label": "817, 744, 1105", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "627,364,725", "label": "627, 364, 725", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "207,224,305", "label": "207, 224, 305", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "369,800,881", "label": "369, 800, 881", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "1265,1248,1777", "label": "1265, 1248, 1777", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "851,420,949", "label": "851, 420, 949", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "117,44,125", "label": "117, 44, 125", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "279,440,521", "label": "279, 440, 521", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "455,528,697", "label": "455, 528, 697", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "221,60,229", "label": "221, 60, 229", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "21,20,29", "label": "21, 20, 29", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "39,80,89", "label": "39, 80, 89", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "57,176,185", "label": "57, 176, 185", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "75,308,317", "label": "75, 308, 317", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "779,660,1021", "label": "779, 660, 1021", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "665,432,793", "label": "665, 432, 793", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "377,336,505", "label": "377, 336, 505", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "715,1428,1597", "label": "715, 1428, 1597", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "2059,2100,2941", "label": "2059, 2100, 2941", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "1305,592,1433", "label": "1305, 592, 1433", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "299,180,349", "label": "299, 180, 349", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "637,1116,1285", "label": "637, 1116, 1285", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "1357,1476,2005", "label": "1357, 1476, 2005", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "759,280,809", "label": "759, 280, 809", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "119,120,169", "label": "119, 120, 169", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "217,456,505", "label": "217, 456, 505", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "315,988,1037", "label": "315, 988, 1037", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "2139,1900,2861", "label": "2139, 1900, 2861", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "1705,1032,1993", "label": "1705, 1032, 1993", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "697,696,985", "label": "697, 696, 985", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "1275,2668,2957", "label": "1275, 2668, 2957", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "4059,4060,5741", "label": "4059, 4060, 5741", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "2665,1272,2953", "label": "2665, 1272, 2953", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "459,220,509", "label": "459, 220, 509", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "1037,1716,2005", "label": "1037, 1716, 2005", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "1917,2156,2885", "label": "1917, 2156, 2885", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "999,320,1049", "label": "999, 320, 1049", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "77,36,85", "label": "77, 36, 85", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "175,288,337", "label": "175, 288, 337", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "273,736,785", "label": "273, 736, 785", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "1425,1312,1937", "label": "1425, 1312, 1937", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "1075,612,1237", "label": "1075, 612, 1237", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "319,360,481", "label": "319, 360, 481", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "561,1240,1361", "label": "561, 1240, 1361", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "2001,1960,2801", "label": "2001, 1960, 2801", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "1363,684,1525", "label": "1363, 684, 1525", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "165,52,173", "label": "165, 52, 173", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "407,624,745", "label": "407, 624, 745", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "615,728,953", "label": "615, 728, 953", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "285,68,293", "label": "285, 68, 293", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "15,8,17", "label": "15, 8, 17", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "33,56,65", "label": "33, 56, 65", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "51,140,149", "label": "51, 140, 149", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "69,260,269", "label": "69, 260, 269", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "629,540,829", "label": "629, 540, 829", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "527,336,625", "label": "527, 336, 625", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "275,252,373", "label": "275, 252, 373", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "517,1044,1165", "label": "517, 1044, 1165", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "1525,1548,2173", "label": "1525, 1548, 2173", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "975,448,1073", "label": "975, 448, 1073", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "209,120,241", "label": "209, 120, 241", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "451,780,901", "label": "451, 780, 901", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "931,1020,1381", "label": "931, 1020, 1381", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "513,184,545", "label": "513, 184, 545", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "65,72,97", "label": "65, 72, 97", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "115,252,277", "label": "115, 252, 277", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "165,532,557", "label": "165, 532, 557", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "1173,1036,1565", "label": "1173, 1036, 1565", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "943,576,1105", "label": "943, 576, 1105", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "403,396,565", "label": "403, 396, 565", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "741,1540,1709", "label": "741, 1540, 1709", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "2325,2332,3293", "label": "2325, 2332, 3293", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "1519,720,1681", "label": "1519, 720, 1681", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "273,136,305", "label": "273, 136, 305", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "611,1020,1189", "label": "611, 1020, 1189", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "1155,1292,1733", "label": "1155, 1292, 1733", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "609,200,641", "label": "609, 200, 641", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "35,12,37", "label": "35, 12, 37", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "85,132,157", "label": "85, 132, 157", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "135,352,377", "label": "135, 352, 377", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "663,616,905", "label": "663, 616, 905", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "493,276,565", "label": "493, 276, 565", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "133,156,205", "label": "133, 156, 205", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "231,520,569", "label": "231, 520, 569", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "855,832,1193", "label": "855, 832, 1193", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "589,300,661", "label": "589, 300, 661", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "63,16,65", "label": "63, 16, 65", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "161,240,289", "label": "161, 240, 289", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "225,272,353", "label": "225, 272, 353", "shape": "dot", "size": 18}, {"color": "#2ed573", "font": {"color": "white"}, "id": "99,20,101", "label": "99, 20, 101", "shape": "dot", "size": 18}]);
+                  edges = new vis.DataSet([{"arrows": "to", "color": "#57606f", "from": "3,4,5", "to": "5,12,13", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "5,12,13", "to": "7,24,25", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "7,24,25", "to": "9,40,41", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "9,40,41", "to": "11,60,61", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "9,40,41", "to": "171,140,221", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "9,40,41", "to": "153,104,185", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "7,24,25", "to": "105,88,137", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "105,88,137", "to": "203,396,445", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "105,88,137", "to": "555,572,797", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "105,88,137", "to": "345,152,377", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "7,24,25", "to": "91,60,109", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "91,60,109", "to": "189,340,389", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "91,60,109", "to": "429,460,629", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "91,60,109", "to": "247,96,265", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "5,12,13", "to": "55,48,73", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "55,48,73", "to": "105,208,233", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "105,208,233", "to": "155,468,493", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "105,208,233", "to": "987,884,1325", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "105,208,233", "to": "777,464,905", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "55,48,73", "to": "297,304,425", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "297,304,425", "to": "539,1140,1261", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "297,304,425", "to": "1755,1748,2477", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "297,304,425", "to": "1161,560,1289", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "55,48,73", "to": "187,84,205", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "187,84,205", "to": "429,700,821", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "187,84,205", "to": "765,868,1157", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "187,84,205", "to": "391,120,409", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "5,12,13", "to": "45,28,53", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "45,28,53", "to": "95,168,193", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "95,168,193", "to": "145,408,433", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "95,168,193", "to": "817,744,1105", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "95,168,193", "to": "627,364,725", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "45,28,53", "to": "207,224,305", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "207,224,305", "to": "369,800,881", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "207,224,305", "to": "1265,1248,1777", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "207,224,305", "to": "851,420,949", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "45,28,53", "to": "117,44,125", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "117,44,125", "to": "279,440,521", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "117,44,125", "to": "455,528,697", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "117,44,125", "to": "221,60,229", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "3,4,5", "to": "21,20,29", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "21,20,29", "to": "39,80,89", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "39,80,89", "to": "57,176,185", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "57,176,185", "to": "75,308,317", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "57,176,185", "to": "779,660,1021", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "57,176,185", "to": "665,432,793", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "39,80,89", "to": "377,336,505", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "377,336,505", "to": "715,1428,1597", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "377,336,505", "to": "2059,2100,2941", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "377,336,505", "to": "1305,592,1433", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "39,80,89", "to": "299,180,349", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "299,180,349", "to": "637,1116,1285", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "299,180,349", "to": "1357,1476,2005", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "299,180,349", "to": "759,280,809", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "21,20,29", "to": "119,120,169", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "119,120,169", "to": "217,456,505", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "217,456,505", "to": "315,988,1037", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "217,456,505", "to": "2139,1900,2861", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "217,456,505", "to": "1705,1032,1993", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "119,120,169", "to": "697,696,985", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "697,696,985", "to": "1275,2668,2957", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "697,696,985", "to": "4059,4060,5741", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "697,696,985", "to": "2665,1272,2953", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "119,120,169", "to": "459,220,509", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "459,220,509", "to": "1037,1716,2005", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "459,220,509", "to": "1917,2156,2885", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "459,220,509", "to": "999,320,1049", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "21,20,29", "to": "77,36,85", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "77,36,85", "to": "175,288,337", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "175,288,337", "to": "273,736,785", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "175,288,337", "to": "1425,1312,1937", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "175,288,337", "to": "1075,612,1237", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "77,36,85", "to": "319,360,481", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "319,360,481", "to": "561,1240,1361", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "319,360,481", "to": "2001,1960,2801", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "319,360,481", "to": "1363,684,1525", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "77,36,85", "to": "165,52,173", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "165,52,173", "to": "407,624,745", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "165,52,173", "to": "615,728,953", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "165,52,173", "to": "285,68,293", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "3,4,5", "to": "15,8,17", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "15,8,17", "to": "33,56,65", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "33,56,65", "to": "51,140,149", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "51,140,149", "to": "69,260,269", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "51,140,149", "to": "629,540,829", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "51,140,149", "to": "527,336,625", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "33,56,65", "to": "275,252,373", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "275,252,373", "to": "517,1044,1165", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "275,252,373", "to": "1525,1548,2173", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "275,252,373", "to": "975,448,1073", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "33,56,65", "to": "209,120,241", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "209,120,241", "to": "451,780,901", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "209,120,241", "to": "931,1020,1381", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "209,120,241", "to": "513,184,545", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "15,8,17", "to": "65,72,97", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "65,72,97", "to": "115,252,277", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "115,252,277", "to": "165,532,557", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "115,252,277", "to": "1173,1036,1565", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "115,252,277", "to": "943,576,1105", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "65,72,97", "to": "403,396,565", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "403,396,565", "to": "741,1540,1709", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "403,396,565", "to": "2325,2332,3293", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "403,396,565", "to": "1519,720,1681", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "65,72,97", "to": "273,136,305", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "273,136,305", "to": "611,1020,1189", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "273,136,305", "to": "1155,1292,1733", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "273,136,305", "to": "609,200,641", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "15,8,17", "to": "35,12,37", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "35,12,37", "to": "85,132,157", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "85,132,157", "to": "135,352,377", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "85,132,157", "to": "663,616,905", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "85,132,157", "to": "493,276,565", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "35,12,37", "to": "133,156,205", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "133,156,205", "to": "231,520,569", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "133,156,205", "to": "855,832,1193", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "133,156,205", "to": "589,300,661", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "35,12,37", "to": "63,16,65", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "63,16,65", "to": "161,240,289", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "63,16,65", "to": "225,272,353", "width": 1.5}, {"arrows": "to", "color": "#57606f", "from": "63,16,65", "to": "99,20,101", "width": 1.5}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"interaction": {"dragNodes": false}, "layout": {"hierarchical": {"enabled": true, "direction": "UD", "sortMethod": "directed", "levelSeparation": 150, "nodeSpacing": 150}}, "physics": {"hierarchicalRepulsion": {"nodeDistance": 140}, "stabilization": {"enabled": true, "iterations": 1000}}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+network.on('stabilizationIterationsDone', function () { network.setOptions({ physics: false }); });
+
+        </script>
+    </body>
+</html>
