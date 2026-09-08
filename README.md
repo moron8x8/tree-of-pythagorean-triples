@@ -31,30 +31,6 @@ The program generates an HTML graph. Below is an example of the generated tree s
 
 ---
 
-## 🚀 Quick Start
-
-### Requirements
-- `gcc` compiler in your system path (PATH)
-- `Python 3.x` installed
-
-### 1. Clone and Install Dependencies
-```bash
-git clone https://github.com
-cd tree-of-pythagorean-triples
-pip install pyvis
-```
-
-### 2. Run the Project
-Simply run the main Python automation script:
-```bash
-python main.py
-```
-The script will automatically compile the `pif3.c` file, perform the calculations, and create the `index.html` file.
-
-### 3. View the Results
-Open the generated `index.html` file in any modern web browser to interact with the interactive tree map.
-
----
 
 ## 📐 Matrix Transformations
 
